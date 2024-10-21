@@ -1,0 +1,109 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CRM API ",
+        "description": "L5 Swagger OpenApi para la interface de recepción de estados de prospecto/agenda de Turpin.",
+        "contact": {
+            "email": "alberto.iriberri@securitasdirect.es"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/prospect-status": {
+            "post": {
+                "tags": [
+                    "Prospect Status"
+                ],
+                "summary": "Reportar el estado de un prospecto / instalación",
+                "operationId": "302e4eeebc0c774994a00a00fea57aff",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "prospect",
+                                    "status",
+                                    "changed_status_at"
+                                ],
+                                "properties": {
+                                    "prospect": {
+                                        "type": "integer",
+                                        "example": "65432154"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "maxLength": 32,
+                                        "minLength": 1,
+                                        "example": "Installed"
+                                    },
+                                    "changed_at": {
+                                        "type": "timestamp",
+                                        "example": "2024-07-15 11:25:35"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Resultado del registro del estado del prospecto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Prospect status change has been recorded"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error asociado al registro del estado del prospecto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Missing required parameter prospect"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Prospect Status",
+            "description": "Prospect Status"
+        }
+    ]
+}
