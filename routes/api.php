@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AclIp;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group([
     'prefix' => 'v1',
-    'middleware' => 'aclip',
+    'middleware' => AclIp::class,
 ], function () {
     Route::post('prospect-status', [\App\Http\Controllers\ProspectStatusController::class, 'change']);
 });
