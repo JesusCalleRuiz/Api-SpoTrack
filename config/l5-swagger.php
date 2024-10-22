@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Middleware\AclIp;
 return [
     'default' => 'default',
     'documentations' => [
@@ -60,10 +60,10 @@ return [
              * Middleware allows to prevent unexpected access to API documentation
              */
             'middleware' => [
-                'api' => [],
-                'asset' => [],
-                'docs' => [],
-                'oauth2_callback' => [],
+                'api' => [AclIp::class],
+                'asset' => [AclIp::class],
+                'docs' => [AclIp::class],
+                'oauth2_callback' => [AclIp::class],
             ],
 
             /*
