@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProspectStatus extends Model
+class Route extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'prospect',
-        'status',
-        'changed_at',
+        'user_id',
+        'name',
+        'path',
+        'distance',
+        'duration',
+        'average_speed',
+        'max_speed'
     ];
 }

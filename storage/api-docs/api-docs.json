@@ -1,45 +1,75 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "CRM API ",
-        "description": "L5 Swagger OpenApi para la interface de recepción de estados de prospecto/agenda de Turpin.",
+        "title": "SPOTRACK API",
+        "description": "L5 Swagger OpenApi para la interface de recepcion de rutas generadas por SpoTrack",
         "contact": {
-            "email": "alberto.iriberri@securitasdirect.es"
+            "email": "jesus.calle.ruiz8@gmail.com"
         },
         "version": "1.0"
     },
     "paths": {
-        "/api/v1/prospect-status": {
+        "/api/route": {
             "post": {
                 "tags": [
-                    "Prospect Status"
+                    "Route"
                 ],
-                "summary": "Reportar el estado de un prospecto / instalación",
-                "operationId": "302e4eeebc0c774994a00a00fea57aff",
+                "summary": "Almacenar ruta de un usuario",
+                "operationId": "9a5bc2f4f46137c1c45a2dbada9c412b",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "prospect",
-                                    "status",
-                                    "changed_status_at"
+                                    "user_id",
+                                    "name",
+                                    "distance",
+                                    "duration",
+                                    "path",
+                                    "average_speed",
+                                    "max_speed"
                                 ],
                                 "properties": {
-                                    "prospect": {
+                                    "user_id": {
                                         "type": "integer",
-                                        "example": "65432154"
+                                        "example": "1"
                                     },
-                                    "status": {
+                                    "name": {
                                         "type": "string",
                                         "maxLength": 32,
                                         "minLength": 1,
-                                        "example": "Installed"
+                                        "example": "Mi primera ruta"
                                     },
-                                    "changed_at": {
-                                        "type": "timestamp",
-                                        "example": "2024-07-15 11:25:35"
+                                    "distance": {
+                                        "type": "string",
+                                        "maxLength": 32,
+                                        "minLength": 1,
+                                        "example": "10km"
+                                    },
+                                    "duration": {
+                                        "type": "string",
+                                        "maxLength": 32,
+                                        "minLength": 1,
+                                        "example": "1h 30m"
+                                    },
+                                    "path": {
+                                        "type": "string",
+                                        "maxLength": 32,
+                                        "minLength": 1,
+                                        "example": "?"
+                                    },
+                                    "average_speed": {
+                                        "type": "string",
+                                        "maxLength": 32,
+                                        "minLength": 1,
+                                        "example": "10km/h"
+                                    },
+                                    "max_speed": {
+                                        "type": "string",
+                                        "maxLength": 32,
+                                        "minLength": 1,
+                                        "example": "30km/h"
                                     }
                                 },
                                 "type": "object"
@@ -49,7 +79,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Resultado del registro del estado del prospecto",
+                        "description": "Resultado del registro de lal ruta",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -64,7 +94,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Prospect status change has been recorded"
+                                            "example": "Route has been recorded"
                                         }
                                     },
                                     "type": "object"
@@ -73,7 +103,7 @@
                         }
                     },
                     "400": {
-                        "description": "Error asociado al registro del estado del prospecto",
+                        "description": "Error asociado al registro de la ruta",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -88,7 +118,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Missing required parameter prospect"
+                                            "example": "Missing required parameter route"
                                         }
                                     },
                                     "type": "object"
@@ -102,8 +132,8 @@
     },
     "tags": [
         {
-            "name": "Prospect Status",
-            "description": "Prospect Status"
+            "name": "Route",
+            "description": "Route"
         }
     ]
 }

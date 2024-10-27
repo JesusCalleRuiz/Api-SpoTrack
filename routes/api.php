@@ -18,10 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('route', [\App\Http\Controllers\RouteController::class, 'store']);
 
-Route::group([
-    'prefix' => 'v1',
-    'middleware' => AclIp::class,
-], function () {
-    Route::post('prospect-status', [\App\Http\Controllers\ProspectStatusController::class, 'change']);
-});
