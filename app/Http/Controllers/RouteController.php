@@ -106,4 +106,68 @@ class RouteController extends Controller
 
         return response()->json(['success'=>true, 'error'=>false, 'message'=>'Route has been save'], 201);
     }
+    /**
+     * @OA\Get(
+     *     path="/api/route/{user_id}",
+     *     tags={"Route"},
+     *     summary="Obtener todas las rutas de un usuario",
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID del usuario para filtrar las rutas"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de rutas del usuario",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="user_id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Mi primera ruta"),
+     *                 @OA\Property(property="distance", type="string", example="10km"),
+     *                 @OA\Property(property="duration", type="string", example="1h 30m"),
+     *                 @OA\Property(
+     *                      property="path",
+     *                      type="array",
+     *                      @OA\Items(
+     *                          type="object",
+     *                          @OA\Property(property="lat", type="number", format="float", example=40.4639),
+     *                          @OA\Property(property="lng", type="number", format="float", example=-3.8095)
+     *                      )
+     *                  ),
+     *                 @OA\Property(property="average_speed", type="string", example="10km/h"),
+     *                 @OA\Property(property="max_speed", type="string", example="30km/h")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error al obtener las rutas",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Error retrieving routes")
+     *         )
+     *     )
+     * )
+     */
+    public function get(Request $request, $user_id): JsonResponse {
+
+        if (!$user_id) {
+            return response()->json(['success' => false, 'error' => true, 'message' => 'Missing required parameter user_id'], 400);
+        }
+
+        try {
+            $routes = Route::where('user_id', $user_id)->get();
+            if ($routes->isEmpty()) {
+                return response()->json(['success' => true, 'error' => false, 'data' => [], 'message' => 'No routes for this user'], 200);
+            }
+            return response()->json(['success' => true, 'error' => false, 'data' => $routes], 200);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => true, 'message' => 'Error retrieving routes: ' . $e->getMessage()], 400);
+        }
+    }
 }
