@@ -96,7 +96,7 @@ class RouteController extends Controller
 
         $nr = new Route();
         $nr->name = $name;
-        $nr->user_id = $r->get('user_id');
+        $nr->user_id = auth()->id();
         $nr->path = $path;
         $nr->distance = $distance;
         $nr->duration = $duration;
@@ -154,18 +154,19 @@ class RouteController extends Controller
      *     )
      * )
      */
-    public function get(Request $request, $user_id): JsonResponse {
-
-        if (!$user_id) {
-            return response()->json(['success' => false, 'error' => true, 'message' => 'Missing required parameter user_id'], 400);
-        }
+    public function get(Request $request): JsonResponse
+    {
 
         try {
-            $routes = Route::where('user_id', $user_id)->get();
+            $userId = auth()->id();
+            $routes = Route::where('user_id', $userId)->get();
+
             if ($routes->isEmpty()) {
-                return response()->json(['success' => true, 'error' => false, 'data' => [], 'message' => 'No routes for this user'], 200);
+                return response()->json(['success' => true, 'error' => false, 'data' => [], 'message' => 'No routes for this user'], 201);
             }
-            return response()->json(['success' => true, 'error' => false, 'data' => $routes], 200);
+
+            return response()->json(['success' => true, 'error' => false, 'data' => $routes], 201);
+
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => true, 'message' => 'Error retrieving routes: ' . $e->getMessage()], 400);
         }
