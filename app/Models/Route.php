@@ -14,7 +14,8 @@ class Route extends Model
         'path',
         'distance',
         'duration',
-        'average_speed',
-        'max_speed'
+        'pace',
+        'sport',
+        'description',
     ];
 }

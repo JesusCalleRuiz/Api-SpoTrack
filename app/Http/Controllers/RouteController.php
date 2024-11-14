@@ -37,8 +37,9 @@ class RouteController extends Controller
      *            @OA\Property(property="distance", type="string", minLength=1, maxLength=32, example="10km"),
      *            @OA\Property(property="duration", type="string", minLength=1, maxLength=32, example="1h 30m"),
      *            @OA\Property(property="path", type="string", minLength=1, maxLength=32, example="?"),
-     *            @OA\Property(property="average_speed", type="string", minLength=1, maxLength=32, example="10km/h"),
-     *            @OA\Property(property="max_speed", type="string", minLength=1, maxLength=32, example="30km/h"),
+     *            @OA\Property(property="pace", type="string", minLength=1, maxLength=32, example="4min 21s"),
+     *            @OA\Property(property="sport", type="string", minLength=1, maxLength=32, example="Ciclismo"),
+     *            @OA\Property(property="description", type="string", minLength=1, maxLength=50, example="Se ha realizado con carretera mojada"),
      *         ),
      *      ),
      *     @OA\Response(
@@ -84,14 +85,19 @@ class RouteController extends Controller
             return response()->json(['success'=>false, 'error'=>true, 'message'=>'Missing required parameter duration'], 400);
         }
 
-        $average_speed = $r->get('average_speed');
-        if($average_speed == null){
-            return response()->json(['success'=>false, 'error'=>true, 'message'=>'Missing required parameter average_speed'], 400);
+        $pace = $r->get('pace');
+        if($pace == null){
+            return response()->json(['success'=>false, 'error'=>true, 'message'=>'Missing required parameter pace'], 400);
         }
 
-        $max_speed = $r->get('max_speed');
-        if($max_speed == null){
-            return response()->json(['success'=>false, 'error'=>true, 'message'=>'Missing required parameter max_speed'], 400);
+        $description = $r->get('description');
+        if($description == null){
+            return response()->json(['success'=>false, 'error'=>true, 'message'=>'Missing required parameter description'], 400);
+        }
+
+        $sport = $r->get('sport');
+        if($sport == null){
+            return response()->json(['success'=>false, 'error'=>true, 'message'=>'Missing required parameter sport'], 400);
         }
 
         $nr = new Route();
@@ -100,8 +106,9 @@ class RouteController extends Controller
         $nr->path = $path;
         $nr->distance = $distance;
         $nr->duration = $duration;
-        $nr->average_speed = $average_speed;
-        $nr->max_speed = $max_speed;
+        $nr->pace = $pace;
+        $nr->description = $description;
+        $nr->sport = $sport;
         $nr->save();
 
         return response()->json(['success'=>true, 'error'=>false, 'message'=>'Route has been save'], 201);
@@ -138,8 +145,9 @@ class RouteController extends Controller
      *                          @OA\Property(property="lng", type="number", format="float", example=-3.8095)
      *                      )
      *                  ),
-     *                 @OA\Property(property="average_speed", type="string", example="10km/h"),
-     *                 @OA\Property(property="max_speed", type="string", example="30km/h")
+     *                 @OA\Property(property="pace", type="string", example="4min 21s"),
+     *                 @OA\Property(property="sport", type="string", example="Ciclismo"),
+     *                 @OA\Property(property="description", type="string", example="Se ha realizado en carretera mojada")
      *             )
      *         )
      *     ),
