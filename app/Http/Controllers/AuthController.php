@@ -145,5 +145,15 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logged out']);
     }
+
+    public function refresh(Request $request)
+    {
+        $user = $request->user();
+        //crea un nuevo token de acceso
+        $newToken = $user->createToken('mobile_token')->plainTextToken;
+
+        return response()->json(['token' => $newToken]);
+    }
+
 }
 

@@ -23,8 +23,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/route', [RouteController::class, 'store']);
     Route::get('/route', [RouteController::class, 'get']);
     Route::post('/logout', [AuthController::class, 'logout']);
-});
-
-Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return response()->json($request->user());
+    Route::post('/refresh', [AuthController::class, 'refresh']);
 });
