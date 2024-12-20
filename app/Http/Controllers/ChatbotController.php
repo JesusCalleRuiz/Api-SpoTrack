@@ -11,18 +11,32 @@ class ChatbotController extends Controller
         $userMessage = $request->input('message');
 
         $client = OpenAI::client(env('OPENAI_API_KEY'));
-        $response = $client->completions()->create([
-            'model' => 'text-davinci-003', //modelo de lenguaje
-            'prompt' => "Eres un asistente para una aplicación deportiva. Responde basándote en estas preguntas frecuentes:\n\n" .
-                "1. ¿Cómo grabo una ruta?\n" .
-                "2. ¿Cómo consulto mis estadísticas?\n" .
-                "3. ¿Qué rutas recomiendas?\n\n" .
-                "Usuario: {$userMessage}\nAsistente:",
-            'max_tokens' => 150,
-            'temperature' => 0.7,
-        ]);
+        try {
+            $response = $client->chat()->create([
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => 'Eres un asistente para una aplicación deportiva llamada Spotrack. Ayudas con soporte técnico y recomendaciones de rutas.
+                                      ',
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $userMessage,
+                    ],
+                ],
+                'max_tokens' => 150,
+                'temperature' => 0.7,
+            ]);
 
-        $reply = trim($response['choices'][0]['text']);
-        return response()->json(['reply' => $reply]);
+            $reply = $response['choices'][0]['message']['content'];
+            return response()->json(['reply' => $reply]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Hubo un problema al procesar tu mensaje.',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
