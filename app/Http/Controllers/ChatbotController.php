@@ -13,12 +13,11 @@ class ChatbotController extends Controller
         $client = OpenAI::client(env('OPENAI_API_KEY'));
         try {
             $response = $client->chat()->create([
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4o-mini',
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => 'Eres un asistente para una aplicación deportiva llamada Spotrack. Ayudas con soporte técnico y recomendaciones de rutas.
-                                      ',
+                        'content' => 'Eres un asistente para una aplicación deportiva llamada Spotrack. Ayudas con soporte técnico y recomendaciones de rutas.',
                     ],
                     [
                         'role' => 'user',
