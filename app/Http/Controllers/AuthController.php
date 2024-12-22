@@ -155,5 +155,97 @@ class AuthController extends Controller
         return response()->json(['token' => $newToken]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/change-password",
+     *     tags={"Auth"},
+     *     summary="Cambiar contraseña del usuario autenticado",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *            required={"current_password", "new_password", "new_password_confirmation"},
+     *            @OA\Property(property="current_password", type="string", format="password", example="oldPassword123"),
+     *            @OA\Property(property="new_password", type="string", format="password", example="newPassword123"),
+     *            @OA\Property(property="new_password_confirmation", type="string", format="password", example="newPassword123")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Contraseña actualizada exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Contraseña actualizada con éxito.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Error en los datos proporcionados o contraseña incorrecta",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="La contraseña actual no es correcta.")
+     *         )
+     *     )
+     * )
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+        $user = $request->user();
+        if (!Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['La contraseña actual no es correcta.'],
+            ]);
+        }
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json(['message' => 'Contraseña actualizada con éxito.'], 200);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/delete-account",
+     *     tags={"Auth"},
+     *     summary="Eliminar cuenta del usuario autenticado",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *            @OA\Property(property="password", type="string", format="password", example="userPassword123")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cuenta eliminada exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Cuenta eliminada con éxito.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Contraseña incorrecta",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="La contraseña no es correcta.")
+     *         )
+     *     )
+     * )
+     */
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+        $user = $request->user();
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => true, 'message' => 'La contraseña no es correcta.'], 400);
+        }
+        $user->delete();
+
+        return response()->json(['message' => 'Cuenta eliminada con éxito.'], 200);
+    }
 }
 
